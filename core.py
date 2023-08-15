@@ -112,8 +112,9 @@ async def get_robot_data(body: TelegramAccount):
     with Session(memory_engine) as session:
         with Session(auth_engine) as auth:
             record = auth.query(TelegramID).where(TelegramID.group_id == body.telegram_id).one()
+            robot = auth.query(Robot).where(Robot.id == record.robot_id)
 
-        result = session.query(RobotDataDB).where(RobotDataDB.serial==record.serial).one()
+        result = session.query(RobotDataDB).where(RobotDataDB.serial==robot.serial).one()
     
     return Response(content=str(result.as_dict()), status_code=status.HTTP_200_OK)
 
