@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from db.models import Robot
+from models import Robot
 
 engine = create_engine("postgresql://postgres:123@localhost/")
 engine.connect()
