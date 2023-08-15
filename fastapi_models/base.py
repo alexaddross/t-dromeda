@@ -23,6 +23,10 @@ class RobotSerial(BaseModel):
     serial: int
 
 
+class TelegramAccount(BaseModel):
+    telegram_id: int
+
+
 class RobotOnData(BaseModel):
     serial: int
     connected: int

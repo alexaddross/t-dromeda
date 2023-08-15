@@ -19,12 +19,12 @@ def main_handler(message):
         bot.send_message(message.from_user.id, 'Здравствуйте! Я -- система удалённого мониторинга кампании Transconvey. Для авторизации, пожалуйста, отправьте серийный номер Вашего робота (его можно найти на шильдах на роботе).', reply_markup=main_menu)
         bot.register_next_step_handler(message, serial_got)
     elif message.text.lower() == 'мешки':
-        response = get(f'http://{HOST}:{PORT}/get_robot_data/')
+        response = get(f'http://{HOST}:{PORT}/get_robot_data/', json={'telegram_id': message.from_user.id})
         robot_data = load_robot_data(response)
 
         bot.send_message(message.from_user.id, bags_formatter(robot_data), parse_mode='HTML')
     elif message.text.lower() == 'состояние':
-        response = get(f'http://{HOST}:{PORT}/get_robot_data/')
+        response = get(f'http://{HOST}:{PORT}/get_robot_data/', json={'telegram_id': message.from_user.id})
         robot_data = load_robot_data(response)
         print(robot_data)
         bot.send_message(message.from_user.id, state_formatter(robot_data), parse_mode='HTML')

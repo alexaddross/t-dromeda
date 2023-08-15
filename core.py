@@ -5,6 +5,7 @@ from fastapi_models.base import RobotData
 from fastapi_models.base import AuthTelegram
 from fastapi_models.base import RobotSerial
 from fastapi_models.base import RobotOnData
+from fastapi_models.base import TelegramAccount
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import PlainTextResponse
@@ -107,9 +108,13 @@ async def new_authentificated_user(body: AuthTelegram):
     
 
 @api_router.get('/get_robot_data')
-async def get_robot_data(body: RobotSerial):
+async def get_robot_data(body: TelegramAccount):
     with Session(memory_engine) as session:
-        result: RobotDataDB = session.query(RobotDataDB).where(RobotDataDB.serial==body.serial).one()
+        with Session(auth_engine) as auth:
+            records: list[AuthTelegram] = auth.query(AuthTelegram).where(AuthTelegram.telegram_id == body.telegram_id).all()
+
+        for record in records:
+            result = session.query(RobotDataDB).where(RobotDataDB.serial==record.serial).one()
     
     return Response(content=str(result.as_dict()), status_code=status.HTTP_200_OK)
 
