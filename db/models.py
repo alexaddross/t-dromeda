@@ -39,21 +39,7 @@ class RobotDataDB(DataBase):
     right_status = Column(Integer, nullable=True)
     right_pallet_status = Column(Integer, nullable=True)
 
+    connected = Column(Integer, nullable=True)
+
     def as_dict(self):
        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
-
-if __name__ == '__main__':
-    engine = create_engine("postgresql://postgres:123@localhost/")
-    engine.connect()
-    AuthBase.metadata.create_all(engine)
-
-    with Session(engine) as session:
-        rb = Robot()
-        rb.serial = 7007
-        rb.location = 'Arzamas, Russia'
-        session.add(rb)
-        session.commit()
-        
-        print(session.query(Robot).all()[0].telegram_ids)
-

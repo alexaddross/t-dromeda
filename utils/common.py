@@ -1,7 +1,8 @@
 import json
 
 
-def load_robot_data(reponse):
-    data_formatted = reponse.content.replace(b"'", b'"')
-
-    return json.loads(data_formatted)
+def load_robot_data(response):
+    data_formatted = response.content.replace(b"'", b'"')
+    data_unnulled = data_formatted.replace(b"None", b"null")
+    print(data_unnulled)
+    return json.loads(data_unnulled)

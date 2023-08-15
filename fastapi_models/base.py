@@ -21,3 +21,8 @@ class AuthTelegram(BaseModel):
 
 class RobotSerial(BaseModel):
     serial: int
+
+
+class RobotOnData(BaseModel):
+    serial: int
+    connected: int

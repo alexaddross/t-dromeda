@@ -4,6 +4,7 @@ from starlette.responses import Response
 from fastapi_models.base import RobotData
 from fastapi_models.base import AuthTelegram
 from fastapi_models.base import RobotSerial
+from fastapi_models.base import RobotOnData
 from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import PlainTextResponse
@@ -55,6 +56,20 @@ async def get_robot_data(*, body: RobotData):
     return Response(status_code=status.HTTP_200_OK)
 
 
+@api_router.post('/robot_on')
+async def robot_on(body: RobotOnData):
+    with Session(memory_engine) as session:
+        new_robot_data = RobotDataDB(
+            serial=body.serial,
+            connected=body.connected
+        )
+
+        session.merge(new_robot_data)
+        session.commit()
+
+    return Response(status_code=status.HTTP_200_OK)
+
+
 @api_router.post('/system_on')
 async def system_startup(body: RobotSerial):
     with Session(auth_engine) as session:
@@ -89,10 +104,9 @@ async def new_authentificated_user(body: AuthTelegram):
 
 
 @api_router.get('/get_robot_data/')
-async def get_robot_data():
+async def get_robot_data(body: RobotSerial):
     with Session(memory_engine) as session:
-        result: RobotDataDB = session.query(RobotDataDB).first()
-    
+        result: RobotDataDB = session.query(RobotDataDB).where(RobotDataDB.serial==body.serial)
     
     return Response(content=str(result.as_dict()), status_code=status.HTTP_200_OK)
 

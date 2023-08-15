@@ -3,6 +3,7 @@ from telebot import TeleBot
 from requests import get
 from utils.common import load_robot_data
 from utils.message_formatters import bags_formatter
+from utils.message_formatters import state_formatter
 import json
 
 bot = TeleBot('6343881202:AAEBAXFJMKTcIunpBkXfzoAIZiT8vp2F0Z0')
@@ -17,6 +18,11 @@ def main_handler(message):
         robot_data = load_robot_data(response)
 
         bot.send_message(message.from_user.id, bags_formatter(robot_data), parse_mode='HTML')
+    elif message.text.lower() == 'состояние':
+        response = get('http://127.0.0.1:8000/get_robot_data/')
+        robot_data = load_robot_data(response)
+        print(robot_data)
+        bot.send_message(message.from_user.id, state_formatter(robot_data), parse_mode='HTML')
 
 
 bot.polling(non_stop=True)
