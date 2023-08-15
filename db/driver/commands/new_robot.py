@@ -13,3 +13,9 @@ def create_new_robot(serial, location="No data"):
         session.commit()
     
     return 200, "Создан новый робот"
+
+
+serial = int(input('Serial\n> '))
+location = input("Location\n>")
+
+create_new_robot(serial, location)
