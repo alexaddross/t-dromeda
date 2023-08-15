@@ -15,7 +15,12 @@ def create_new_robot(serial, location="No data"):
     return 200, "Создан новый робот"
 
 
-serial = int(input('Serial\n> '))
-location = input("Location\n>")
+while True:
+    if input('> ').lower() in ['new robot', 'nr']:
+        serial = int(input('Serial\n> '))
+        location = input("Location\n>")
 
-create_new_robot(serial, location)
+        create_new_robot(serial, location)
+        print('Robot succesfully created')
+    else:
+        print('Fuck you')
