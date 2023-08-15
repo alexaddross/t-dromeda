@@ -18,8 +18,7 @@ import sqlalchemy
 from sqlalchemy.orm import Session
 from db.models import DataBase, RobotDataDB, Robot, TelegramID
 
-HOST = '127.0.0.1'
-PORT = 80
+from config import *
 
 
 
@@ -85,7 +84,7 @@ async def system_startup(body: RobotSerial):
         print(requests.post(f"https://api.telegram.org/bot6343881202:AAEBAXFJMKTcIunpBkXfzoAIZiT8vp2F0Z0/sendMessage?chat_id={tg_id.group_id}&text=Система паллетизации запущена").content)
 
 
-@api_router.post('/new_auth/')
+@api_router.post('/new_auth')
 async def new_authentificated_user(body: AuthTelegram):
     with Session(auth_engine) as session:
         matches = session.query(Robot).where(Robot.serial == body.serial).all()
@@ -107,14 +106,12 @@ async def new_authentificated_user(body: AuthTelegram):
             return Response(status_code=status.HTTP_403_FORBIDDEN)
     
 
-
-@api_router.get('/get_robot_data/')
+@api_router.get('/get_robot_data')
 async def get_robot_data(body: RobotSerial):
     with Session(memory_engine) as session:
-        result: RobotDataDB = session.query(RobotDataDB).where(RobotDataDB.serial==body.serial)
+        result: RobotDataDB = session.query(RobotDataDB).where(RobotDataDB.serial==body.serial).one()
     
     return Response(content=str(result.as_dict()), status_code=status.HTTP_200_OK)
-
 
 app.include_router(api_router)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
