@@ -17,6 +17,7 @@ bot = TeleBot('6343881202:AAEBAXFJMKTcIunpBkXfzoAIZiT8vp2F0Z0')
 def main_handler(message):
     if message.text.lower() == '/start':
         bot.send_message(message.from_user.id, 'Здравствуйте! Я -- система удалённого мониторинга кампании Transconvey. Для авторизации, пожалуйста, отправьте серийный номер Вашего робота (его можно найти на шильдах на роботе).', reply_markup=main_menu)
+        bot.register_next_step_handler(message, serial_got)
     elif message.text.lower() == 'мешки':
         response = get(f'http://{HOST}:{PORT}/get_robot_data/')
         robot_data = load_robot_data(response)

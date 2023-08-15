@@ -113,8 +113,10 @@ async def get_robot_data(body: RobotSerial):
     
     return Response(content=str(result.as_dict()), status_code=status.HTTP_200_OK)
 
+
 app.include_router(api_router)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
+
 
 if __name__ == '__main__':
     uvicorn.run(app, host=HOST, port=PORT)
