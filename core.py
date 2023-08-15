@@ -12,9 +12,14 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 import requests
 
+import uvicorn
+
 import sqlalchemy
 from sqlalchemy.orm import Session
 from db.models import DataBase, RobotDataDB, Robot, TelegramID
+
+HOST = '127.0.0.1'
+PORT = 80
 
 
 
@@ -113,3 +118,6 @@ async def get_robot_data(body: RobotSerial):
 
 app.include_router(api_router)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)
+
+if __name__ == '__main__':
+    uvicorn.run(app, host=HOST, port=PORT)
