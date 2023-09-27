@@ -111,10 +111,10 @@ async def new_authentificated_user(body: AuthTelegram):
 async def get_robot_data(body: TelegramAccount):
     with Session(memory_engine) as session:
         with Session(auth_engine) as auth:
-            record = auth.query(TelegramID).where(TelegramID.group_id == body.telegram_id).last()
-            robot = auth.query(Robot).where(Robot.id == record.robot_id).last()
+            record = auth.query(TelegramID).where(TelegramID.group_id == body.telegram_id).all()[-1]
+            robot = auth.query(Robot).where(Robot.id == record.robot_id).all()[-1]
 
-        result = session.query(RobotDataDB).where(RobotDataDB.serial==robot.serial).last()
+        result = session.query(RobotDataDB).where(RobotDataDB.serial==robot.serial).all()[-1]
     
     return Response(content=str(result.as_dict()), status_code=status.HTTP_200_OK)
 
