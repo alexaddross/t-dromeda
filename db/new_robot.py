@@ -5,8 +5,9 @@ from models import Robot
 engine = create_engine("postgresql://postgres:123@localhost/")
 engine.connect()
 
-def create_new_robot(serial, location="No data"):
-    new_robot = Robot(serial=serial, location=location)
+
+def create_new_robot(serial, location="No data", robot_type="No data"):
+    new_robot = Robot(serial=serial, location=location, robot_type=robot_type)
 
     with Session(engine) as session:
         session.add(new_robot)
@@ -18,9 +19,10 @@ def create_new_robot(serial, location="No data"):
 while True:
     if input('> ').lower() in ['new robot', 'nr']:
         serial = int(input('Serial\n> '))
-        location = input("Location\n>")
+        location = input('Location\n> ')
+        robot_type = input('Robot Type\n> ')
 
-        create_new_robot(serial, location)
-        print('Robot succesfully created')
+        response = create_new_robot(serial, location, robot_type)
+        print(response)
     else:
         print('Fuck you')

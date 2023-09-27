@@ -111,13 +111,23 @@ async def new_authentificated_user(body: AuthTelegram):
 async def get_robot_data(body: TelegramAccount):
     with Session(memory_engine) as session:
         with Session(auth_engine) as auth:
+            record = auth.query(TelegramID).where(TelegramID.group_id == body.telegram_id).last()
+            robot = auth.query(Robot).where(Robot.id == record.robot_id).last()
+
+        result = session.query(RobotDataDB).where(RobotDataDB.serial==robot.serial).last()
+    
+    return Response(content=str(result.as_dict()), status_code=status.HTTP_200_OK)
+
+
+@api_router.get('get_robot_backup')
+async def get_robot_backup(body: TelegramAccount):
+    with Session(memory_engine) as session:
+        with Session(auth_engine) as auth:
             record = auth.query(TelegramID).where(TelegramID.group_id == body.telegram_id).one()
             robot = auth.query(Robot).where(Robot.id == record.robot_id).one()
 
         result = session.query(RobotDataDB).where(RobotDataDB.serial==robot.serial).one()
     
-    return Response(content=str(result.as_dict()), status_code=status.HTTP_200_OK)
-
 
 app.include_router(api_router)
 app.add_exception_handler(RequestValidationError, validation_exception_handler)

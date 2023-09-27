@@ -15,6 +15,7 @@ class Robot(AuthBase):
     id = Column(BigInteger, primary_key=True)
     telegram_ids = relationship("TelegramID", backref="robot")
     serial = Column(BigInteger, unique=True)
+    robot_type = Column(String, nullable=True, default=None)
     location = Column(String, nullable=True, default=None)
 
 
